@@ -13,8 +13,10 @@ public class EnemyAI : MonoBehaviour
 
     void Update()
     {
+        PlayerInteract playerScript = player.GetComponent<PlayerInteract>();
+
         float distanceToPlayer = Vector3.Distance(transform.position, player.position);
-        playerInSight = distanceToPlayer < sightRange;
+        playerInSight = (distanceToPlayer < sightRange) && !playerScript.isPlayerHiding;
 
         if (playerInSight)
         {
