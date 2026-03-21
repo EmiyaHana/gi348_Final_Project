@@ -22,8 +22,7 @@ public class PlayerMovement : MonoBehaviour
     void Update()
     {
         float x = Input.GetAxis("Horizontal");
-        float z = Input.GetAxis("Vertical");
-        Vector3 move = transform.right * x + transform.forward * z;
+        Vector3 move = new Vector3(x, 0, 0); 
 
         bool isRunning = Input.GetKey(KeyCode.LeftShift) && currentStamina > 0;
         float currentSpeed = isRunning ? runSpeed : walkSpeed;
@@ -40,5 +39,11 @@ public class PlayerMovement : MonoBehaviour
         if(staminaBar != null) staminaBar.value = currentStamina;
 
         controller.Move(move * currentSpeed * Time.deltaTime);
+
+        if (move != Vector3.zero)
+        {
+            Quaternion targetRotation = Quaternion.LookRotation(move);
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 10f * Time.deltaTime);
+        }
     }
 }

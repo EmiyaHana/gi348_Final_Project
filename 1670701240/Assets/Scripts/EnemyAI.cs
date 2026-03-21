@@ -11,12 +11,17 @@ public class EnemyAI : MonoBehaviour
     public float sightRange = 10f;
     public bool playerInSight;
 
+    void Start()
+    {
+        agent.updateRotation = false;
+    }
+
     void Update()
     {
         PlayerInteract playerScript = player.GetComponent<PlayerInteract>();
 
         float distanceToPlayer = Vector3.Distance(transform.position, player.position);
-        playerInSight = (distanceToPlayer < sightRange) && !playerScript.isPlayerHiding;
+        playerInSight = (distanceToPlayer < sightRange) && !playerScript.isHiding;
 
         if (playerInSight)
         {
@@ -28,6 +33,8 @@ public class EnemyAI : MonoBehaviour
             agent.speed = 2f;
             Patroling();
         }
+
+        UpdateFacingDirection();
     }
 
     void Patroling()
@@ -36,6 +43,18 @@ public class EnemyAI : MonoBehaviour
         {
             agent.SetDestination(patrolPoints[currentPoint].position);
             currentPoint = (currentPoint + 1) % patrolPoints.Length;
+        }
+    }
+
+    void UpdateFacingDirection()
+    {
+        if (agent.velocity.x > 0.1f)
+        {
+            transform.rotation = Quaternion.Euler(0, 90, 0); 
+        }
+        else if (agent.velocity.x < -0.1f)
+        {
+            transform.rotation = Quaternion.Euler(0, -90, 0); 
         }
     }
 }

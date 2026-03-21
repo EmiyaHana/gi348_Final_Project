@@ -3,48 +3,38 @@ using TMPro;
 
 public class PlayerInteract : MonoBehaviour
 {
-    public float interactRange = 3f;
-    public bool hasKey = false;
-    public bool isPlayerHiding = false;
+    public float interactRadius = 1.5f;
+    public bool hasKey = false; 
+    public bool isHiding = false; 
 
-    public TextMeshProUGUI interactText;
+    public TextMeshProUGUI interactText; 
 
     void Update()
     {
-        if (interactText != null) interactText.text = "";
+        if (interactText != null) interactText.text = ""; 
 
-        Ray ray = new Ray(transform.position, transform.forward);
-        RaycastHit hit;
-
-        if (Physics.Raycast(ray, out hit, interactRange))
+        if (isHiding)
         {
-            if (hit.collider.CompareTag("Key"))
+            if (interactText != null) interactText.text = "Press E to exit.";
+            return;
+        }
+
+        Collider[] colliders = Physics.OverlapSphere(transform.position, interactRadius);
+
+        foreach (Collider hit in colliders)
+        {
+            if (hit.CompareTag("Key"))
             {
                 if (interactText != null) interactText.text = "Press E to collect.";
                 if (Input.GetKeyDown(KeyCode.E))
                 {
                     hasKey = true;
-                    Destroy(hit.collider.gameObject);
+                    Destroy(hit.gameObject);
                 }
+                break;
             }
 
-            if (hit.collider.CompareTag("Locker"))
-            {
-                if (!isPlayerHiding)
-                {
-                    if (interactText != null) interactText.text = "Press E to hide.";
-                    if (Input.GetKeyDown(KeyCode.E))
-                    {
-                        hit.collider.GetComponent<HidingSpot>().EnterLocker();
-                    }
-                }
-                else
-                {
-                    if (interactText != null) interactText.text = "Press E to exit.";
-                }
-            }
-
-            if (hit.collider.CompareTag("ExitDoor"))
+            if (hit.CompareTag("ExitDoor"))
             {
                 if (!hasKey)
                 {
@@ -55,11 +45,28 @@ public class PlayerInteract : MonoBehaviour
                     if (interactText != null) interactText.text = "Press E to use the key.";
                     if (Input.GetKeyDown(KeyCode.E))
                     {
-                        Debug.Log("You escape (For now).");
+                        Debug.Log("You have successfully escape (For now).");
                         if (interactText != null) interactText.text = "YOU SURVIVED!";
                     }
                 }
+                break;
+            }
+
+            if (hit.CompareTag("Locker"))
+            {
+                if (interactText != null) interactText.text = "Press E to hide.";
+                if (Input.GetKeyDown(KeyCode.E))
+                {
+                    hit.GetComponent<HidingSpot>().EnterLocker();
+                }
+                break;
             }
         }
+    }
+
+    void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, interactRadius);
     }
 }
