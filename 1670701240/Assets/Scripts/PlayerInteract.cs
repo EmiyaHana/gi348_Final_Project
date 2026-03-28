@@ -10,6 +10,9 @@ public class PlayerInteract : MonoBehaviour
 
     public TextMeshProUGUI interactText;
 
+    [Header("CameraWhenHiding")]
+    public CameraFollow mainCameraScript;
+
     [Header("UI Game Clear")]
     public GameObject gameClearPanel;
 
@@ -84,15 +87,20 @@ public class PlayerInteract : MonoBehaviour
 
             if (hit.CompareTag("Stairs"))
             {
-                if (interactText != null) interactText.text = "Press E to using stairs.";
+                StairsTeleporter stairs = hit.GetComponent<StairsTeleporter>();
+
+                string textToShow = "";
+                if (stairs.upDestination != null || stairs.downDestination != null) textToShow += "Press W , S to use stairs.";
+
+                if (interactText != null) interactText.text = textToShow;
                 
-                if (Input.GetKeyDown(KeyCode.E))
+                if (Input.GetKeyDown(KeyCode.W) && stairs.upDestination != null)
                 {
-                    StairsTeleporter stairs = hit.GetComponent<StairsTeleporter>();
-                    if (stairs != null)
-                    {
-                        stairs.TeleportPlayer(this.gameObject);
-                    }
+                    stairs.TeleportUp(this.gameObject);
+                }
+                else if (Input.GetKeyDown(KeyCode.S) && stairs.downDestination != null)
+                {
+                    stairs.TeleportDown(this.gameObject);
                 }
                 break;
             }
@@ -136,6 +144,22 @@ public class PlayerInteract : MonoBehaviour
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
     }
+
+    public void SetHidingCamera(Transform hidingCameraPoint)
+    {
+        if (mainCameraScript != null && hidingCameraPoint != null)
+        {
+            mainCameraScript.target = hidingCameraPoint;
+        }
+    }
+
+    public void ResetCameraToPlayer()
+    {
+        if (mainCameraScript != null)
+        {
+            mainCameraScript.target = this.transform;
+        }
+     }
 
     void OnDrawGizmosSelected()
     {

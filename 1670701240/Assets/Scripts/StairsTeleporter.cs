@@ -3,24 +3,27 @@ using UnityEngine;
 public class StairsTeleporter : MonoBehaviour
 {
     [Header("Destinations")]
-    public Transform destination;
+    public Transform upDestination;
+    public Transform downDestination;
 
-    public void TeleportPlayer(GameObject player)
+    public void TeleportUp(GameObject player)
     {
-        if (destination != null)
-        {
-            CharacterController cc = player.GetComponent<CharacterController>();
-            if (cc != null) cc.enabled = false;
+        if (upDestination != null) DoWarp(player, upDestination);
+    }
 
-            player.transform.position = destination.position;
+    public void TeleportDown(GameObject player)
+    {
+        if (downDestination != null) DoWarp(player, downDestination);
+    }
 
-            if (cc != null) cc.enabled = true;
+    public void DoWarp(GameObject player, Transform dest)
+    {
+        CharacterController cc = player.GetComponent<CharacterController>();
+        if (cc != null) cc.enabled = false;
 
-            Debug.Log("Go to the next floor...");
-        }
-        else
-        {
-            Debug.LogWarning("Error... Check the destination for stairs.");
-        }
+        player.transform.position = dest.position;
+
+        if (cc != null) cc.enabled = true;
+        Debug.Log("Go to the next floor...");
     }
 }

@@ -2,7 +2,13 @@ using UnityEngine;
 
 public class HidingSpot : MonoBehaviour
 {
+    [Header("Initial_Hiding")]
+    public GameObject darknessUI;
+    public Transform playerStandPoint;
+    public Transform cameraFollowPoint;
+
     private Vector3 originalPlayerPos;
+    private Transform originalPlayerParent;
 
     public void EnterLocker(PlayerInteract player)
     {
@@ -11,15 +17,36 @@ public class HidingSpot : MonoBehaviour
 
         originalPlayerPos = player.transform.position;
 
-        player.GetComponent<CharacterController>().enabled = false;
-        player.GetComponent<PlayerMovement>().enabled = false;
-
         player.transform.position = transform.position;
+        originalPlayerParent = player.transform.parent;
+
+        CharacterController cc = player.GetComponent<CharacterController>();
+        PlayerMovement move = player.GetComponent<PlayerMovement>();
+        if (cc != null) cc.enabled = false;
+        if (move != null) move.enabled = false;
+
+        if (playerStandPoint != null)
+        {
+            player.transform.position = playerStandPoint.position;
+        }
+        else
+        {
+            player.transform.position = transform.position;
+        }
+
+        player.transform.SetParent(this.transform);
 
         Renderer[] renderers = player.GetComponentsInChildren<Renderer>();
         foreach(Renderer r in renderers)
         {
             r.enabled = false;
+        }
+
+        if (darknessUI != null) darknessUI.SetActive(true);
+
+        if (cameraFollowPoint != null)
+        {
+            player.SetHidingCamera(cameraFollowPoint);
         }
 
         LighterSystem lighter = player.GetComponent<LighterSystem>();
@@ -33,16 +60,24 @@ public class HidingSpot : MonoBehaviour
         player.isHiding = false;
         player.currentHidingSpot = null;
 
+        player.transform.SetParent(originalPlayerParent);
+
         player.transform.position = originalPlayerPos;
 
-        player.GetComponent<CharacterController>().enabled = true;
-        player.GetComponent<PlayerMovement>().enabled = true;
+        CharacterController cc = player.GetComponent<CharacterController>();
+        PlayerMovement move = player.GetComponent<PlayerMovement>();
+        if (cc != null) cc.enabled = true;
+        if (move != null) move.enabled = true;
 
         Renderer[] renderers = player.GetComponentsInChildren<Renderer>();
         foreach(Renderer r in renderers)
         {
             r.enabled = true;
         }
+
+        if (darknessUI != null) darknessUI.SetActive(false);
+
+        player.ResetCameraToPlayer();
 
         LighterSystem lighter = player.GetComponent<LighterSystem>();
         if (lighter != null && lighter.isLighterOn)

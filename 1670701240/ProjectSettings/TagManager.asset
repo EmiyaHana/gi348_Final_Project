@@ -11,14 +11,15 @@ TagManager:
   - ItemStamina
   - ItemHealth
   - Stairs
+  - Enemy
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Player
   - Water
   - UI
-  - 
+  - Enemy
   - 
   - 
   - 
