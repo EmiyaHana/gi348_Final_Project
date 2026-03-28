@@ -82,6 +82,21 @@ public class PlayerInteract : MonoBehaviour
                 break;
             }
 
+            if (hit.CompareTag("Stairs"))
+            {
+                if (interactText != null) interactText.text = "Press E to using stairs.";
+                
+                if (Input.GetKeyDown(KeyCode.E))
+                {
+                    StairsTeleporter stairs = hit.GetComponent<StairsTeleporter>();
+                    if (stairs != null)
+                    {
+                        stairs.TeleportPlayer(this.gameObject);
+                    }
+                }
+                break;
+            }
+
             if (hit.CompareTag("ItemHealth"))
             {
                 if (interactText != null) interactText.text = "Press E to use item (heal 1 HP).";

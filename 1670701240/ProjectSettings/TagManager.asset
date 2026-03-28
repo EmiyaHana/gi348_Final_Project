@@ -10,6 +10,7 @@ TagManager:
   - ExitDoor
   - ItemStamina
   - ItemHealth
+  - Stairs
   layers:
   - Default
   - TransparentFX
