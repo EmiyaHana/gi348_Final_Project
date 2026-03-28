@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class PlayerHealth : MonoBehaviour
 {
@@ -11,10 +12,17 @@ public class PlayerHealth : MonoBehaviour
     public Sprite fullHeart;
     public Sprite emptyHeart;
 
+    [Header("Game Over UI")]
+    public GameObject gameOverPanel;
+
     void Start()
     {
         currentHealth = maxHealth;
         UpdateHealthUI();
+
+        if (gameOverPanel != null) gameOverPanel.SetActive(false);
+        
+        Time.timeScale = 1f;
     }
 
     public void TakeDamage(int amount)
@@ -24,7 +32,7 @@ public class PlayerHealth : MonoBehaviour
         if (currentHealth <= 0)
         {
             currentHealth = 0;
-            Debug.Log("Game Over! คุณตายแล้ว");
+            Die();
         }
         
         UpdateHealthUI();
@@ -46,5 +54,24 @@ public class PlayerHealth : MonoBehaviour
             else
                 heartImages[i].sprite = emptyHeart;
         }
+    }
+
+    void Die()
+    {
+        if (gameOverPanel != null) 
+        {
+            gameOverPanel.SetActive(true);
+        }
+        
+        Time.timeScale = 0f;
+       
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+    }
+
+    public void RestartGame()
+    {
+        Time.timeScale = 1f;
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name); 
     }
 }

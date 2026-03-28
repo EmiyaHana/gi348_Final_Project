@@ -61,6 +61,29 @@ public class PlayerInteract : MonoBehaviour
                 }
                 break;
             }
+
+            if (hit.CompareTag("ItemHealth"))
+            {
+                if (interactText != null) interactText.text = "Press E to use item (heal 1 HP).";
+                if (Input.GetKeyDown(KeyCode.E))
+                {
+                    GetComponent<PlayerHealth>().Heal(1);
+                    Destroy(hit.gameObject);
+                }
+                break;
+            }
+
+            if (hit.CompareTag("ItemStamina"))
+            {
+                if (interactText != null) interactText.text = "Press E to use item (restore the stamina bar).";
+                if (Input.GetKeyDown(KeyCode.E))
+                {
+                    PlayerMovement moveScript = GetComponent<PlayerMovement>();
+                    moveScript.currentStamina = moveScript.maxStamina;
+                    Destroy(hit.gameObject);
+                }
+                break;
+            }
         }
     }
 
