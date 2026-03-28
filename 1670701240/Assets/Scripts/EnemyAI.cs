@@ -11,6 +11,9 @@ public class EnemyAI : MonoBehaviour
     public float sightRange = 10f;
     public bool playerInSight;
 
+    private bool wasChasing = false;
+
+    [Header("Attack Settings")]
     public float attackRange = 1.5f;
     public float attackCooldown = 2f;
     private float lastAttackTime = 0f;
@@ -31,6 +34,7 @@ public class EnemyAI : MonoBehaviour
         {
             agent.SetDestination(player.position);
             agent.speed = 5f;
+            wasChasing = true;
 
             if (distanceToPlayer <= attackRange)
             {
@@ -44,8 +48,35 @@ public class EnemyAI : MonoBehaviour
         }
         else
         {
-            agent.speed = 2f;
-            Patroling();
+            if (wasChasing)
+            {
+                wasChasing = false;
+                agent.speed = 2f;
+               
+                if (patrolPoints.Length > 0)
+                {
+                    int furthestPointIndex = 0;
+                    float maxDist = 0f;
+                    
+                    for (int i = 0; i < patrolPoints.Length; i++)
+                    {
+                        float dist = Vector3.Distance(player.position, patrolPoints[i].position);
+                        if (dist > maxDist)
+                        {
+                            maxDist = dist;
+                            furthestPointIndex = i;
+                        }
+                    }
+                    
+                    currentPoint = furthestPointIndex;
+                    agent.SetDestination(patrolPoints[currentPoint].position);
+                }
+            }
+            else
+            {
+                agent.speed = 2f;
+                Patroling();
+            }
         }
 
         UpdateFacingDirection();
@@ -53,6 +84,8 @@ public class EnemyAI : MonoBehaviour
 
     void Patroling()
     {
+        if (patrolPoints.Length == 0) return;
+
         if (!agent.pathPending && agent.remainingDistance < 0.5f)
         {
             agent.SetDestination(patrolPoints[currentPoint].position);
