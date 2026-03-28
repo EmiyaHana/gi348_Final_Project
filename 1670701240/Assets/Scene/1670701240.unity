@@ -913,6 +913,7 @@ MonoBehaviour:
   interactRadius: 1.5
   hasKey: 0
   isHiding: 0
+  currentHidingSpot: {fileID: 0}
   interactText: {fileID: 1420124143}
 --- !u!114 &720968525
 MonoBehaviour:
@@ -2538,6 +2539,7 @@ GameObject:
   - component: {fileID: 1997669616}
   - component: {fileID: 1997669615}
   - component: {fileID: 1997669614}
+  - component: {fileID: 1997669618}
   m_Layer: 0
   m_Name: Locker
   m_TagString: Locker
@@ -2634,6 +2636,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1997669618
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1997669613}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7162894402a4f874093e30873e2a996d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2137563251
 GameObject:
   m_ObjectHideFlags: 0

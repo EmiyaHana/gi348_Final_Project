@@ -2,42 +2,54 @@ using UnityEngine;
 
 public class HidingSpot : MonoBehaviour
 {
-    public Transform hidePosition;
-    public GameObject playerObj; 
-    
-    private bool isHiding = false;
     private Vector3 originalPlayerPos;
 
-    void Update()
+    public void EnterLocker(PlayerInteract player)
     {
-        if (isHiding && Input.GetKeyDown(KeyCode.E))
+        player.isHiding = true;
+        player.currentHidingSpot = this;
+
+        originalPlayerPos = player.transform.position;
+
+        player.GetComponent<CharacterController>().enabled = false;
+        player.GetComponent<PlayerMovement>().enabled = false;
+
+        player.transform.position = transform.position;
+
+        Renderer[] renderers = player.GetComponentsInChildren<Renderer>();
+        foreach(Renderer r in renderers)
         {
-            ExitLocker();
+            r.enabled = false;
         }
+
+        LighterSystem lighter = player.GetComponent<LighterSystem>();
+        if (lighter != null) lighter.lighterLight.enabled = false;
+
+        Debug.Log("You using the locker right now.");
     }
 
-    public void EnterLocker()
+    public void ExitLocker(PlayerInteract player)
     {
-        isHiding = true;
-        originalPlayerPos = playerObj.transform.position;
+        player.isHiding = false;
+        player.currentHidingSpot = null;
 
-        playerObj.transform.position = hidePosition.position;
-        playerObj.GetComponent<CharacterController>().enabled = false;
+        player.transform.position = originalPlayerPos;
 
-        playerObj.GetComponent<PlayerInteract>().isHiding = true;
+        player.GetComponent<CharacterController>().enabled = true;
+        player.GetComponent<PlayerMovement>().enabled = true;
 
-        Debug.Log("You're Hiding now.'");
-    }
+        Renderer[] renderers = player.GetComponentsInChildren<Renderer>();
+        foreach(Renderer r in renderers)
+        {
+            r.enabled = true;
+        }
 
-    public void ExitLocker()
-    {
-        isHiding = false;
+        LighterSystem lighter = player.GetComponent<LighterSystem>();
+        if (lighter != null && lighter.isLighterOn)
+        {
+            lighter.lighterLight.enabled = true;
+        }
 
-        playerObj.transform.position = originalPlayerPos;
-        playerObj.GetComponent<CharacterController>().enabled = true;
-
-        playerObj.GetComponent<PlayerInteract>().isHiding = false;
-        
-        Debug.Log("You left the hiding spot.");
+        Debug.Log("Exit from locker.");
     }
 }

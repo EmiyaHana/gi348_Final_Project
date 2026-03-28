@@ -5,7 +5,8 @@ public class PlayerInteract : MonoBehaviour
 {
     public float interactRadius = 1.5f;
     public bool hasKey = false; 
-    public bool isHiding = false; 
+    public bool isHiding = false;
+    public HidingSpot currentHidingSpot;
 
     public TextMeshProUGUI interactText; 
 
@@ -16,6 +17,14 @@ public class PlayerInteract : MonoBehaviour
         if (isHiding)
         {
             if (interactText != null) interactText.text = "Press E to exit.";
+            
+            if (Input.GetKeyDown(KeyCode.E))
+            {
+                if (currentHidingSpot != null)
+                {
+                    currentHidingSpot.ExitLocker(this); // เรียกฟังก์ชันออกจากตู้
+                }
+            }
             return;
         }
 
@@ -57,7 +66,11 @@ public class PlayerInteract : MonoBehaviour
                 if (interactText != null) interactText.text = "Press E to hide.";
                 if (Input.GetKeyDown(KeyCode.E))
                 {
-                    hit.GetComponent<HidingSpot>().EnterLocker();
+                    HidingSpot spot = hit.GetComponent<HidingSpot>();
+                    if (spot != null) 
+                    {
+                        spot.EnterLocker(this);
+                    }
                 }
                 break;
             }
