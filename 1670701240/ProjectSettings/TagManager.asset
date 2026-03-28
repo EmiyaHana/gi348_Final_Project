@@ -8,6 +8,8 @@ TagManager:
   - Key
   - Locker
   - ExitDoor
+  - ItemStamina
+  - ItemHealth
   layers:
   - Default
   - TransparentFX

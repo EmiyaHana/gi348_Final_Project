@@ -11,6 +11,10 @@ public class EnemyAI : MonoBehaviour
     public float sightRange = 10f;
     public bool playerInSight;
 
+    public float attackRange = 1.5f;
+    public float attackCooldown = 2f;
+    private float lastAttackTime = 0f;
+
     void Start()
     {
         agent.updateRotation = false;
@@ -27,6 +31,16 @@ public class EnemyAI : MonoBehaviour
         {
             agent.SetDestination(player.position);
             agent.speed = 5f;
+
+            if (distanceToPlayer <= attackRange)
+            {
+                if (Time.time >= lastAttackTime + attackCooldown)
+                {
+                    player.GetComponent<PlayerHealth>().TakeDamage(1);
+                    lastAttackTime = Time.time;
+                    Debug.Log("Enemy Attacking! Lose 1 HP");
+                }
+            }
         }
         else
         {
