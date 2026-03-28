@@ -8,7 +8,15 @@ public class PlayerInteract : MonoBehaviour
     public bool isHiding = false;
     public HidingSpot currentHidingSpot;
 
-    public TextMeshProUGUI interactText; 
+    public TextMeshProUGUI interactText;
+
+    [Header("UI Game Clear")]
+    public GameObject gameClearPanel;
+
+    void Start()
+    {
+        if (gameClearPanel != null) gameClearPanel.SetActive(false);
+    }
 
     void Update()
     {
@@ -22,7 +30,7 @@ public class PlayerInteract : MonoBehaviour
             {
                 if (currentHidingSpot != null)
                 {
-                    currentHidingSpot.ExitLocker(this); // เรียกฟังก์ชันออกจากตู้
+                    currentHidingSpot.ExitLocker(this);
                 }
             }
             return;
@@ -54,8 +62,7 @@ public class PlayerInteract : MonoBehaviour
                     if (interactText != null) interactText.text = "Press E to use the key.";
                     if (Input.GetKeyDown(KeyCode.E))
                     {
-                        Debug.Log("You have successfully escape (For now).");
-                        if (interactText != null) interactText.text = "YOU SURVIVED!";
+                        WinGame();
                     }
                 }
                 break;
@@ -98,6 +105,21 @@ public class PlayerInteract : MonoBehaviour
                 break;
             }
         }
+    }
+
+    void WinGame()
+    {
+        Debug.Log("You have successfully escape (For now).");
+        
+        if (gameClearPanel != null)
+        {
+            gameClearPanel.SetActive(true);
+        }
+        
+        Time.timeScale = 0f;
+        
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
     }
 
     void OnDrawGizmosSelected()
