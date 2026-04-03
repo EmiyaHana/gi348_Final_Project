@@ -5,14 +5,25 @@ public class RoomDoor : MonoBehaviour
 {
     [Header("DoorSetting")]
     public bool isLocked = false;
+
     [Tooltip("TeleportPosition")]
     public Transform teleportTarget;       
+
+    [Header("UI Settings")]
+    [Tooltip("Warning Text")]
+    public GameObject interactPromptUI;
 
     [Header("Text")]
     public GameObject lockedMessageUI;
 
     private bool playerInRange = false;
     private GameObject playerRef;
+
+    void Start()
+    {
+        if (interactPromptUI != null) interactPromptUI.SetActive(false);
+        if (lockedMessageUI != null) lockedMessageUI.SetActive(false);
+    }
 
     void Update()
     {
@@ -35,6 +46,8 @@ public class RoomDoor : MonoBehaviour
         {
             playerInRange = true;
             playerRef = other.gameObject;
+
+            if (interactPromptUI != null) interactPromptUI.SetActive(true);
         }
         
         if (other.CompareTag("Enemy") && !isLocked)
@@ -50,6 +63,7 @@ public class RoomDoor : MonoBehaviour
             playerInRange = false;
             playerRef = null;
             
+            if (interactPromptUI != null) interactPromptUI.SetActive(false);
             if (lockedMessageUI != null) lockedMessageUI.SetActive(false);
         }
     }
@@ -64,6 +78,8 @@ public class RoomDoor : MonoBehaviour
             playerRef.transform.position = teleportTarget.position;
             
             if (cc != null) cc.enabled = true;
+
+            if (interactPromptUI != null) interactPromptUI.SetActive(false);
 
             Debug.Log("Enter the door.");
         }
@@ -86,6 +102,8 @@ public class RoomDoor : MonoBehaviour
 
     void ShowLockedMessage()
     {
+        if (interactPromptUI != null) interactPromptUI.SetActive(false);
+
         if (lockedMessageUI != null)
         {
             lockedMessageUI.SetActive(true);
@@ -98,6 +116,11 @@ public class RoomDoor : MonoBehaviour
         if (lockedMessageUI != null)
         {
             lockedMessageUI.SetActive(false);
+        }
+
+        if (playerInRange && interactPromptUI != null) 
+        {
+            interactPromptUI.SetActive(true);
         }
     }
 }

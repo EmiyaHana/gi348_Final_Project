@@ -8,33 +8,48 @@ public class EnemyAI : MonoBehaviour
     public Transform[] patrolPoints;
     private int currentPoint = 0;
     
-    public float sightRange = 10f;
+    [Header("Range for chasing")]
+    public float baseSightRange = 10f;
+    public float currentSightRange;
     public bool playerInSight;
 
     private bool wasChasing = false;
+    private Vector3 lastSeenPosition;
+    private bool isInvestigating = false;
 
     [Header("Attack Settings")]
     public float attackRange = 1.5f;
     public float attackCooldown = 2f;
     private float lastAttackTime = 0f;
 
+    [Header("Generator Status")]
+    public bool isActive = true;
+
     void Start()
     {
         agent.updateRotation = false;
+        currentSightRange = baseSightRange;
+
+        if (!isActive) gameObject.SetActive(false);
     }
 
     void Update()
     {
+        if (!isActive || player == null) return;
+
         PlayerInteract playerScript = player.GetComponent<PlayerInteract>();
 
         float distanceToPlayer = Vector3.Distance(transform.position, player.position);
-        playerInSight = (distanceToPlayer < sightRange) && !playerScript.isHiding;
+        playerInSight = (distanceToPlayer < baseSightRange) && !playerScript.isHiding;
 
         if (playerInSight)
         {
             agent.SetDestination(player.position);
             agent.speed = 5f;
             wasChasing = true;
+            isInvestigating = false;
+
+            lastSeenPosition = player.position;
 
             if (distanceToPlayer <= attackRange)
             {
@@ -51,27 +66,21 @@ public class EnemyAI : MonoBehaviour
             if (wasChasing)
             {
                 wasChasing = false;
-                agent.speed = 2f;
-               
-                if (patrolPoints.Length > 0)
+                isInvestigating = true;
+                agent.speed = 4f;
+                agent.SetDestination(lastSeenPosition);
+            }
+
+            else if (isInvestigating)
+            {
+                if (!agent.pathPending && agent.remainingDistance < 1f)
                 {
-                    int furthestPointIndex = 0;
-                    float maxDist = 0f;
-                    
-                    for (int i = 0; i < patrolPoints.Length; i++)
-                    {
-                        float dist = Vector3.Distance(player.position, patrolPoints[i].position);
-                        if (dist > maxDist)
-                        {
-                            maxDist = dist;
-                            furthestPointIndex = i;
-                        }
-                    }
-                    
-                    currentPoint = furthestPointIndex;
-                    agent.SetDestination(patrolPoints[currentPoint].position);
+                    isInvestigating = false;
+                    agent.speed = 2f;
+                    FindFurthestPatrolPoint();
                 }
             }
+
             else
             {
                 agent.speed = 2f;
@@ -80,6 +89,27 @@ public class EnemyAI : MonoBehaviour
         }
 
         UpdateFacingDirection();
+    }
+
+    void FindFurthestPatrolPoint()
+    {
+        if (patrolPoints.Length > 0)
+        {
+            int furthestPointIndex = 0;
+            float maxDist = 0f;
+            
+            for (int i = 0; i < patrolPoints.Length; i++)
+            {
+                float dist = Vector3.Distance(transform.position, patrolPoints[i].position);
+                if (dist > maxDist)
+                {
+                    maxDist = dist;
+                    furthestPointIndex = i;
+                }
+            }
+            currentPoint = furthestPointIndex;
+            agent.SetDestination(patrolPoints[currentPoint].position);
+        }
     }
 
     void Patroling()
@@ -103,5 +133,12 @@ public class EnemyAI : MonoBehaviour
         {
             transform.rotation = Quaternion.Euler(0, -90, 0); 
         }
+    }
+
+    public void ActivateEnemy()
+    {
+        isActive = true;
+        gameObject.SetActive(true);
+        Debug.Log("º’∂Ÿ°ª≈ÿ°·≈È«!");
     }
 }
