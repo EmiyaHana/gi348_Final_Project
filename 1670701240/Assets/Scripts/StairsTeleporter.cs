@@ -22,7 +22,6 @@ public class StairsTeleporter : MonoBehaviour
         if (cc != null) cc.enabled = false;
 
         player.transform.position = dest.position;
-
         if (cc != null) cc.enabled = true;
         Debug.Log("Go to the next floor...");
     }
