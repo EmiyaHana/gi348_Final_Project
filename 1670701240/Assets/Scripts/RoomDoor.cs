@@ -1,16 +1,12 @@
 using UnityEngine;
-using UnityEngine.UI;
+using UnityEngine.AI;
 
 public class RoomDoor : MonoBehaviour
 {
     [Header("DoorSetting")]
     public bool isLocked = false;
-    public Transform teleportTarget;
-
-    [Header("HidingWall")]
-    [Tooltip("You can enter = yes / If you can't = no'")]
-    public bool hideWallOnEnter = true;    
-    public GameObject[] blockingWalls;
+    [Tooltip("TeleportPosition")]
+    public Transform teleportTarget;       
 
     [Header("Text")]
     public GameObject lockedMessageUI;
@@ -28,7 +24,7 @@ public class RoomDoor : MonoBehaviour
             }
             else
             {
-                EnterRoom();
+                TeleportPlayer();
             }
         }
     }
@@ -39,6 +35,11 @@ public class RoomDoor : MonoBehaviour
         {
             playerInRange = true;
             playerRef = other.gameObject;
+        }
+        
+        if (other.CompareTag("Enemy") && !isLocked)
+        {
+            StartCoroutine(EnemyTeleport(other.gameObject));
         }
     }
 
@@ -53,7 +54,7 @@ public class RoomDoor : MonoBehaviour
         }
     }
 
-    void EnterRoom()
+    void TeleportPlayer()
     {
         if (teleportTarget != null && playerRef != null)
         {
@@ -64,15 +65,22 @@ public class RoomDoor : MonoBehaviour
             
             if (cc != null) cc.enabled = true;
 
-            foreach (GameObject wall in blockingWalls)
-            {
-                if (wall != null)
-                {
-                    wall.SetActive(!hideWallOnEnter); 
-                }
-            }
+            Debug.Log("Enter the door.");
+        }
+    }
 
-            Debug.Log("Enter the dorr.");
+    System.Collections.IEnumerator EnemyTeleport(GameObject enemy)
+    {
+        yield return new WaitForSeconds(0.5f); 
+        
+        if (teleportTarget != null)
+        {
+            NavMeshAgent agent = enemy.GetComponent<NavMeshAgent>();
+            if (agent != null)
+            {
+                agent.Warp(teleportTarget.position);
+                Debug.Log("Something has follow you.");
+            }
         }
     }
 
@@ -81,7 +89,7 @@ public class RoomDoor : MonoBehaviour
         if (lockedMessageUI != null)
         {
             lockedMessageUI.SetActive(true);
-            Invoke("HideLockedMessage", 2f); 
+            Invoke("HideLockedMessage", 2f);
         }
     }
 
