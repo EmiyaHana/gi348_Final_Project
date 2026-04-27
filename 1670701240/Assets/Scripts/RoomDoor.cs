@@ -31,7 +31,19 @@ public class RoomDoor : MonoBehaviour
         {
             if (isLocked)
             {
-                ShowLockedMessage();
+                InventoryManager inv = playerRef.GetComponent<InventoryManager>();
+
+                if (inv != null && inv.keyCount > 0)
+                {
+                    inv.keyCount--; // À—°°ÿ≠·®ÕÕ° 1 ¥Õ°
+                    isLocked = false;
+                    Debug.Log("‰¢°ÿ≠·® ”‡√Á®!");
+                    TeleportPlayer();
+                }
+                else
+                {
+                    ShowLockedMessage();
+                }
             }
             else
             {

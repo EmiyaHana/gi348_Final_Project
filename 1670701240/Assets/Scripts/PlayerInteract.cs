@@ -39,6 +39,25 @@ public class PlayerInteract : MonoBehaviour
             return;
         }
 
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            Collider[] hitColliders = Physics.OverlapSphere(transform.position, interactRadius);
+            foreach (var hit in hitColliders)
+            {
+                SearchableObject searchable = hit.GetComponent<SearchableObject>();
+                if (searchable != null)
+                {
+                    searchable.Search(GetComponent<InventoryManager>());
+                    break;
+                }
+            }
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha1)) GetComponent<InventoryManager>().UseItem(0);
+        if (Input.GetKeyDown(KeyCode.Alpha2)) GetComponent<InventoryManager>().UseItem(1);
+        if (Input.GetKeyDown(KeyCode.Alpha3)) GetComponent<InventoryManager>().UseItem(2);
+        if (Input.GetKeyDown(KeyCode.Alpha4)) GetComponent<InventoryManager>().UseItem(3);
+
         Collider[] colliders = Physics.OverlapSphere(transform.position, interactRadius);
 
         foreach (Collider hit in colliders)
