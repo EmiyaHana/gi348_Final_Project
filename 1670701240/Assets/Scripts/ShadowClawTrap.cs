@@ -52,7 +52,7 @@ public class ShadowClawTrap : MonoBehaviour
             StartCoroutine(ShowClawVisual());
             if (attackSound != null) attackSound.Play();
 
-            Debug.Log("โดนมือผีตะปบเข้าให้แล้ว!");
+            Debug.Log("You have been attacked!");
         }
     }
 

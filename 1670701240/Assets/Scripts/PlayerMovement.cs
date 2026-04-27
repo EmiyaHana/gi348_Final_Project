@@ -17,8 +17,8 @@ public class PlayerMovement : MonoBehaviour
 
     [Header("Dodge System")]
     public bool isDodging = false;
-    public float dodgeSpeed = 12f;
-    public float dodgeDuration = 0.3f;
+    public float dodgeSpeed = 15f;
+    public float dodgeDuration = 1f;
     public float dodgeStaminaCost = 25f;
 
     void Start()
@@ -67,7 +67,7 @@ public class PlayerMovement : MonoBehaviour
     IEnumerator DodgeRoutine()
     {
         isDodging = true;
-        currentStamina -= dodgeStaminaCost; // หักสตามิน่า
+        currentStamina -= dodgeStaminaCost;
         Debug.Log("Dodging!");
         
         yield return new WaitForSeconds(dodgeDuration);
