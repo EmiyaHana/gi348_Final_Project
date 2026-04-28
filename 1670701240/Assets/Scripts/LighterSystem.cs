@@ -7,8 +7,8 @@ public class LighterSystem : MonoBehaviour
     public bool isLighterOn = false;
 
     [Header("Flicker Effect")]  
-    public float minIntensity = 1.5f;
-    public float maxIntensity = 3.0f;
+    public float minIntensity = 3.0f;
+    public float maxIntensity = 20.0f;
 
     public float flickerSpeed = 10f; 
     private float randomOffset;

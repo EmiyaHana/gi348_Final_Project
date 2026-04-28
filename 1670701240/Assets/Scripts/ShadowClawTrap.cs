@@ -48,19 +48,18 @@ public class ShadowClawTrap : MonoBehaviour
 
         if (health != null && movement != null)
         {
+            StartCoroutine(ShowClawVisual());
+            if (attackSound != null) attackSound.Play();
+
+            cooldownTimer = attackCooldown;
+
             if (!movement.isDodging)
             {
                 health.TakeDamage(damageAmount);
-                cooldownTimer = attackCooldown;
-
-                StartCoroutine(ShowClawVisual());
-                if (attackSound != null) attackSound.Play();
-
                 Debug.Log("You have been attacked!");
             }
             else
             {
-                cooldownTimer = attackCooldown; 
                 Debug.Log("Dodging success!");
             }
         }

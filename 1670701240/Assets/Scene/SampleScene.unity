@@ -4962,8 +4962,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   lighterLight: {fileID: 1091056208}
   isLighterOn: 0
-  minIntensity: 1.5
-  maxIntensity: 3
+  minIntensity: 3
+  maxIntensity: 20
   flickerSpeed: 10
 --- !u!114 &720968526
 MonoBehaviour:
@@ -7776,7 +7776,7 @@ Transform:
   m_GameObject: {fileID: 1091056206}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.7, y: 0.44, z: 0}
+  m_LocalPosition: {x: 0, y: 0.76, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
