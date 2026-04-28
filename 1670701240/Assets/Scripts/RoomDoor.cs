@@ -67,11 +67,6 @@ public class RoomDoor : MonoBehaviour
                 interactPromptUI.SetActive(true);
             }
         }
-        
-        if (other.CompareTag("Enemy") && !isLocked)
-        {
-            StartCoroutine(EnemyTeleport(other.gameObject));
-        }
     }
 
     private void OnTriggerExit(Collider other)
@@ -101,14 +96,25 @@ public class RoomDoor : MonoBehaviour
             if (interactPromptUI != null) interactPromptUI.SetActive(false);
 
             Debug.Log("Enter the door.");
+
+            GameObject enemy = GameObject.FindGameObjectWithTag("Enemy");
+            if (enemy != null)
+            {
+                float distanceToEnemy = Vector3.Distance(transform.position, enemy.transform.position);
+                
+                if (distanceToEnemy < 15f)
+                {
+                    StartCoroutine(EnemyTeleport(enemy));
+                }
+            }
         }
     }
 
     System.Collections.IEnumerator EnemyTeleport(GameObject enemy)
     {
-        yield return new WaitForSeconds(0.5f); 
+        yield return new WaitForSeconds(1.5f); 
         
-        if (teleportTarget != null)
+        if (teleportTarget != null && enemy != null)
         {
             NavMeshAgent agent = enemy.GetComponent<NavMeshAgent>();
             if (agent != null)
