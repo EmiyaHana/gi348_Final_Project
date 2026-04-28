@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.AI;
+using TMPro;
 
 public class RoomDoor : MonoBehaviour
 {
@@ -19,6 +20,8 @@ public class RoomDoor : MonoBehaviour
     private bool playerInRange = false;
     private GameObject playerRef;
 
+    private bool isShowingMessage = false;
+
     void Start()
     {
         if (interactPromptUI != null) interactPromptUI.SetActive(false);
@@ -27,22 +30,22 @@ public class RoomDoor : MonoBehaviour
 
     void Update()
     {
-        if (playerInRange && Input.GetKeyDown(KeyCode.E))
+        if (playerInRange && playerRef != null && Input.GetKeyDown(KeyCode.E))
         {
+            InventoryManager inv = playerRef.GetComponent<InventoryManager>();
+
             if (isLocked)
             {
-                InventoryManager inv = playerRef.GetComponent<InventoryManager>();
-
                 if (inv != null && inv.keyCount > 0)
                 {
-                    inv.keyCount--; // À—°°ÿ≠·®ÕÕ° 1 ¥Õ°
+                    inv.keyCount--;
                     isLocked = false;
-                    Debug.Log("‰¢°ÿ≠·® ”‡√Á®!");
+                    Debug.Log("Success!");
                     TeleportPlayer();
                 }
                 else
                 {
-                    ShowLockedMessage();
+                    ShowLockedMessage("You need a key.");
                 }
             }
             else
@@ -52,14 +55,17 @@ public class RoomDoor : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerStay(Collider other)
     {
         if (other.CompareTag("Player"))
         {
             playerInRange = true;
             playerRef = other.gameObject;
 
-            if (interactPromptUI != null) interactPromptUI.SetActive(true);
+            if (interactPromptUI != null && !isShowingMessage)
+            {
+                interactPromptUI.SetActive(true);
+            }
         }
         
         if (other.CompareTag("Enemy") && !isLocked)
@@ -74,6 +80,7 @@ public class RoomDoor : MonoBehaviour
         {
             playerInRange = false;
             playerRef = null;
+            isShowingMessage = false;
             
             if (interactPromptUI != null) interactPromptUI.SetActive(false);
             if (lockedMessageUI != null) lockedMessageUI.SetActive(false);
@@ -112,19 +119,27 @@ public class RoomDoor : MonoBehaviour
         }
     }
 
-    void ShowLockedMessage()
+    void ShowLockedMessage(string msg)
     {
-        if (interactPromptUI != null) interactPromptUI.SetActive(false);
+        isShowingMessage = true;
 
         if (lockedMessageUI != null)
         {
+            var textComp = lockedMessageUI.GetComponentInChildren<TextMeshProUGUI>();
+            if (textComp != null) textComp.text = msg;
+
+            if (interactPromptUI != null) interactPromptUI.SetActive(false);
+
             lockedMessageUI.SetActive(true);
+
+            CancelInvoke("HideLockedMessage");
             Invoke("HideLockedMessage", 2f);
         }
     }
 
     void HideLockedMessage()
     {
+        isShowingMessage = false;
         if (lockedMessageUI != null)
         {
             lockedMessageUI.SetActive(false);

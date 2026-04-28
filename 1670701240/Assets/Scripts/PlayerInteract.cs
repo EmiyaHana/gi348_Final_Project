@@ -39,15 +39,73 @@ public class PlayerInteract : MonoBehaviour
             return;
         }
 
+        Collider[] hitColliders = Physics.OverlapSphere(transform.position, interactRadius);
+
+        foreach (var hit in hitColliders)
+        {
+            SearchableObject searchable = hit.GetComponent<SearchableObject>();
+            if (searchable != null && !searchable.isSearched)
+            {
+                if (interactText != null) interactText.text = "Press [E] to search " + searchable.objectName;
+                break;
+            }
+
+            if (hit.CompareTag("ItemStamina"))
+            {
+                if (interactText != null) interactText.text = "Press [E] to pick up item.";
+                break;
+            }
+
+            if (hit.CompareTag("ItemHealth"))
+            {
+                if (interactText != null) interactText.text = "Press [E] to pick up Medkit.";
+                break;
+            }
+
+            Generator gen = hit.GetComponent<Generator>();
+            if (gen != null && !Generator.isGeneratorFixed)
+            {
+                if (interactText != null) interactText.text = "Press [E] to fix the Generator.";
+                break;
+            }
+        }
+
         if (Input.GetKeyDown(KeyCode.E))
         {
-            Collider[] hitColliders = Physics.OverlapSphere(transform.position, interactRadius);
             foreach (var hit in hitColliders)
             {
                 SearchableObject searchable = hit.GetComponent<SearchableObject>();
-                if (searchable != null)
+                if (searchable != null && !searchable.isSearched)
                 {
                     searchable.Search(GetComponent<InventoryManager>());
+                    break;
+                }
+
+                if (hit.CompareTag("ItemStamina"))
+                {
+                    InventoryManager inv = GetComponent<InventoryManager>();
+                    if (inv != null && inv.AddItem("Stamina"))
+                    {
+                        Destroy(hit.gameObject);
+                    }
+                    break;
+                }
+
+                if (hit.CompareTag("ItemHealth"))
+                {
+                    InventoryManager inv = GetComponent<InventoryManager>();
+                    if (inv != null)
+                    {
+                        if (inv.AddItem("Health"))
+                        {
+                            Destroy(hit.gameObject);
+                        }
+                        else
+                        {
+                            Debug.Log("Your inventory is full.");
+                            if (interactText != null) interactText.text = "Inventory is full!";
+                        }
+                    }
                     break;
                 }
             }
@@ -151,6 +209,8 @@ public class PlayerInteract : MonoBehaviour
 
     public void WinGame()
     {
+        if (interactText != null) interactText.text = "";
+
         Debug.Log("You have successfully escape (For now).");
         
         if (gameClearPanel != null)

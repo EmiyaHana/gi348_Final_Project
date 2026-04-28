@@ -13,6 +13,8 @@ public class BasementExit : MonoBehaviour
     private bool playerInRange = false;
     private GameObject playerRef;
 
+    private bool isShowingMessage = false;
+
     void Start()
     {
         if (interactPromptUI != null) interactPromptUI.SetActive(false);
@@ -28,7 +30,11 @@ public class BasementExit : MonoBehaviour
             if (inv != null && inv.HasKey(keyNeeded) && Generator.isGeneratorFixed)
             {
                 if (interactPromptUI != null) interactPromptUI.SetActive(false);
+                if (lockedMessageUI != null) lockedMessageUI.SetActive(false);
+
                 playerRef.GetComponent<PlayerInteract>().WinGame();
+
+                this.enabled = false;
             }
             else
             {
@@ -45,13 +51,17 @@ public class BasementExit : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerStay(Collider other)
     {
         if (other.CompareTag("Player"))
         {
             playerInRange = true;
             playerRef = other.gameObject;
-            if (interactPromptUI != null) interactPromptUI.SetActive(true);
+
+            if (interactPromptUI != null && !isShowingMessage) 
+            {
+                interactPromptUI.SetActive(true);
+            }
         }
     }
 
@@ -61,6 +71,8 @@ public class BasementExit : MonoBehaviour
         {
             playerInRange = false;
             playerRef = null;
+            isShowingMessage = false;
+
             if (interactPromptUI != null) interactPromptUI.SetActive(false);
             if (lockedMessageUI != null) lockedMessageUI.SetActive(false);
         }
@@ -68,10 +80,14 @@ public class BasementExit : MonoBehaviour
 
     void ShowCustomLockedMessage(string msg)
     {
+        isShowingMessage = true;
+
         if (lockedMessageUI != null)
         {
             var textComp = lockedMessageUI.GetComponentInChildren<TextMeshProUGUI>();
             if (textComp != null) textComp.text = msg;
+
+            if (interactPromptUI != null) interactPromptUI.SetActive(false);
 
             lockedMessageUI.SetActive(true);
             CancelInvoke("HideLockedMessage");
@@ -81,6 +97,12 @@ public class BasementExit : MonoBehaviour
 
     void HideLockedMessage()
     {
+        isShowingMessage = false;
         if (lockedMessageUI != null) lockedMessageUI.SetActive(false);
+
+        if (playerInRange && interactPromptUI != null)
+        {
+            interactPromptUI.SetActive(true);
+        }
     }
 }
