@@ -10,6 +10,23 @@ public class InventoryManager : MonoBehaviour
     [Header("Key Items (Separated)")]
     public int keyCount = 0;
 
+    [Header("Special Keys")]
+    public List<KeyType> specialKeys = new List<KeyType>();
+
+    public void AddSpecialKey(KeyType type)
+    {
+        if (!specialKeys.Contains(type))
+        {
+            specialKeys.Add(type);
+            Debug.Log("Got key : " + type.ToString());
+        }
+    }
+
+    public bool HasKey(KeyType type)
+    {
+        return specialKeys.Contains(type);
+    }
+
     public bool AddItem(string itemName)
     {
         if (slots.Count < maxSlots)

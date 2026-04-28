@@ -149,7 +149,7 @@ public class PlayerInteract : MonoBehaviour
         }
     }
 
-    void WinGame()
+    public void WinGame()
     {
         Debug.Log("You have successfully escape (For now).");
         

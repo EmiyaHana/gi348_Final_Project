@@ -3,11 +3,11 @@ using UnityEngine;
 public class Generator : MonoBehaviour
 {
     public EnemyAI enemyScript; 
-    public bool isPowerOn = false;
+    public static bool isGeneratorFixed = false;
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.E) && !isPowerOn)
+        if (Input.GetKeyDown(KeyCode.E) && !isGeneratorFixed)
         {
             float dist = Vector3.Distance(transform.position, GameObject.FindGameObjectWithTag("Player").transform.position);
             if(dist < 3f) StartGenerator();
@@ -16,7 +16,7 @@ public class Generator : MonoBehaviour
 
     void StartGenerator()
     {
-        isPowerOn = true;
+        isGeneratorFixed = true;
         Debug.Log("The generator is activated...");
         
         if (enemyScript != null)
