@@ -44,10 +44,10 @@ public class InventoryManager : MonoBehaviour
             }
             else
             {
-                string keyListText = "Special Items :\n";
+                string keyListText = "You have : ";
                 foreach (KeyType key in specialKeys)
                 {
-                    keyListText += "- " + key.ToString() + "\n"; 
+                    keyListText += " - " + key.ToString() + "\n"; 
                 }
                 specialKeyDisplayUI.text = keyListText;
             }
