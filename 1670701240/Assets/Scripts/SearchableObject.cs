@@ -6,7 +6,6 @@ public class SearchableObject : MonoBehaviour
     public bool isSearched = false;
 
     [Header("Item Inside")]
-    public bool hasKey = false;
     public int healthItems = 0;
     public int staminaItems = 0;
 
@@ -19,12 +18,6 @@ public class SearchableObject : MonoBehaviour
         if (specialKeyInside != KeyType.None)
         {
             inventory.AddSpecialKey(specialKeyInside);
-        }
-
-        if (hasKey)
-        {
-            inventory.AddKey();
-            hasKey = false;
         }
 
         for (int i = 0; i < healthItems; i++)

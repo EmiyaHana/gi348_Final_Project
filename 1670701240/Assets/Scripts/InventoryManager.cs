@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using TMPro;
 
 public class InventoryManager : MonoBehaviour
 {
@@ -7,24 +8,50 @@ public class InventoryManager : MonoBehaviour
     public int maxSlots = 4;
     public List<string> slots = new List<string>();
 
-    [Header("Key Items (Separated)")]
-    public int keyCount = 0;
+    [Header("UI Special Key")]
+    public TextMeshProUGUI specialKeyDisplayUI;
 
     [Header("Special Keys")]
     public List<KeyType> specialKeys = new List<KeyType>();
 
-    public void AddSpecialKey(KeyType type)
+    void Start()
     {
-        if (!specialKeys.Contains(type))
+        UpdateSpecialKeyUI();
+    }
+
+    public void AddSpecialKey(KeyType newKey)
+    {
+        if (!specialKeys.Contains(newKey))
         {
-            specialKeys.Add(type);
-            Debug.Log("Got key : " + type.ToString());
+            specialKeys.Add(newKey);
+            Debug.Log("You got " + newKey.ToString());
+            UpdateSpecialKeyUI();
         }
     }
 
-    public bool HasKey(KeyType type)
+    public bool HasKey(KeyType keyNeeded)
     {
-        return specialKeys.Contains(type);
+        return specialKeys.Contains(keyNeeded);
+    }
+
+    public void UpdateSpecialKeyUI()
+    {
+        if (specialKeyDisplayUI != null)
+        {
+            if (specialKeys.Count == 0)
+            {
+                specialKeyDisplayUI.text = "";
+            }
+            else
+            {
+                string keyListText = "Special Items :\n";
+                foreach (KeyType key in specialKeys)
+                {
+                    keyListText += "- " + key.ToString() + "\n"; 
+                }
+                specialKeyDisplayUI.text = keyListText;
+            }
+        }
     }
 
     public bool AddItem(string itemName)
@@ -40,12 +67,6 @@ public class InventoryManager : MonoBehaviour
             Debug.Log("Your inventory is full now!");
             return false;
         }
-    }
-
-    public void AddKey()
-    {
-        keyCount++;
-        Debug.Log("You got the key!");
     }
 
     public void UseItem(int slotIndex)

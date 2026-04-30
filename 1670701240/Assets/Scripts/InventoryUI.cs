@@ -7,7 +7,6 @@ public class InventoryUI : MonoBehaviour
     
     [Header("UI Elements")]
     public TextMeshProUGUI[] slotTexts;
-    public TextMeshProUGUI keyText;
 
     void Update()
     {
@@ -23,11 +22,6 @@ public class InventoryUI : MonoBehaviour
             {
                 slotTexts[i].text = (i+1) + " : Empty";
             }
-        }
-
-        if (keyText != null)
-        {
-            keyText.text = "Key : " + invManager.keyCount;
         }
     }
 }

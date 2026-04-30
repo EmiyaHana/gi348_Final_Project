@@ -14,44 +14,19 @@ public class RoomDoor : MonoBehaviour
     [Tooltip("Warning Text")]
     public GameObject interactPromptUI;
 
-    [Header("Text")]
-    public GameObject lockedMessageUI;
-
     private bool playerInRange = false;
     private GameObject playerRef;
-
-    private bool isShowingMessage = false;
 
     void Start()
     {
         if (interactPromptUI != null) interactPromptUI.SetActive(false);
-        if (lockedMessageUI != null) lockedMessageUI.SetActive(false);
     }
 
     void Update()
     {
         if (playerInRange && playerRef != null && Input.GetKeyDown(KeyCode.E))
         {
-            InventoryManager inv = playerRef.GetComponent<InventoryManager>();
-
-            if (isLocked)
-            {
-                if (inv != null && inv.keyCount > 0)
-                {
-                    inv.keyCount--;
-                    isLocked = false;
-                    Debug.Log("Success!");
-                    TeleportPlayer();
-                }
-                else
-                {
-                    ShowLockedMessage("You need a key.");
-                }
-            }
-            else
-            {
-                TeleportPlayer();
-            }
+            TeleportPlayer();
         }
     }
 
@@ -62,7 +37,7 @@ public class RoomDoor : MonoBehaviour
             playerInRange = true;
             playerRef = other.gameObject;
 
-            if (interactPromptUI != null && !isShowingMessage)
+            if (interactPromptUI != null)
             {
                 interactPromptUI.SetActive(true);
             }
@@ -75,10 +50,8 @@ public class RoomDoor : MonoBehaviour
         {
             playerInRange = false;
             playerRef = null;
-            isShowingMessage = false;
             
             if (interactPromptUI != null) interactPromptUI.SetActive(false);
-            if (lockedMessageUI != null) lockedMessageUI.SetActive(false);
         }
     }
 
@@ -122,38 +95,6 @@ public class RoomDoor : MonoBehaviour
                 agent.Warp(teleportTarget.position);
                 Debug.Log("Something has follow you.");
             }
-        }
-    }
-
-    void ShowLockedMessage(string msg)
-    {
-        isShowingMessage = true;
-
-        if (lockedMessageUI != null)
-        {
-            var textComp = lockedMessageUI.GetComponentInChildren<TextMeshProUGUI>();
-            if (textComp != null) textComp.text = msg;
-
-            if (interactPromptUI != null) interactPromptUI.SetActive(false);
-
-            lockedMessageUI.SetActive(true);
-
-            CancelInvoke("HideLockedMessage");
-            Invoke("HideLockedMessage", 2f);
-        }
-    }
-
-    void HideLockedMessage()
-    {
-        isShowingMessage = false;
-        if (lockedMessageUI != null)
-        {
-            lockedMessageUI.SetActive(false);
-        }
-
-        if (playerInRange && interactPromptUI != null) 
-        {
-            interactPromptUI.SetActive(true);
         }
     }
 }
