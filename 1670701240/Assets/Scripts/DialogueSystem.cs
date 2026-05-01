@@ -43,7 +43,7 @@ public class DialogueSystem : MonoBehaviour
     {
         if (isDialogueActive)
         {
-            if (Input.GetKeyDown(KeyCode.E) || Input.GetMouseButtonDown(0))
+            if (Input.GetKeyDown(KeyCode.KeypadEnter) || Input.GetMouseButtonDown(0))
             {
                 NextLine();
             }

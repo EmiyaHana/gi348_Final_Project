@@ -56,11 +56,11 @@ public class InventoryManager : MonoBehaviour
                 {
                     if (key == KeyType.OfficeKey)
                     {
-                        keyListText += " - Office Key\n";
+                        keyListText += "Office Key\n";
                     }
                     if (key == KeyType.BasementExitKey)
                     {
-                        keyListText += " - Basement Exit Key\n";
+                        keyListText += "Basement Exit Key\n";
                     } 
                 }
                 specialKeyDisplayUI.text = keyListText;

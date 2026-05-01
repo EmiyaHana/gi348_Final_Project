@@ -3,21 +3,24 @@ using TMPro;
 
 public class LockedDoor : MonoBehaviour
 {
+    [Header("Door Settings")]
+    public KeyType keyNeeded;
+    public bool isLocked = true;
+    public Transform teleportTarget;
+    public GameObject interactPromptUI;
+
     [Header("Objective Settings")]
     public string objectiveRequired = "";
     public string nextObjective = "";
-    [TextArea(2, 5)] public string[] dialogueAfterComplete;
+    [TextArea(2, 5)] public string[] dialogueAfterOpen;
 
     [Header("Locked Settings")]
-    public KeyType keyNeeded;
-    public bool isLocked = true;
+    public string objectiveWhenLocked;
+    public string nextObjectiveWhenLocked;
     [TextArea(2, 5)] public string[] dialogueWhenLocked;
-
-    public Transform teleportTarget;
-    public GameObject interactPromptUI;
     public GameObject lockedMessageUI;
 
-    private bool playerInRange;
+    private bool playerInRange = false;
     private GameObject playerRef;
 
     private bool isShowingMessage = false;
@@ -48,10 +51,23 @@ public class LockedDoor : MonoBehaviour
                         Debug.Log("Use basement exit key.");
                     }
 
+                    if (!string.IsNullOrEmpty(objectiveRequired) && ObjectiveManager.Instance.currentObjective == objectiveRequired)
+                    {
+                        ObjectiveManager.Instance.SetObjective(nextObjective);
+                    }
+
+                    if (dialogueAfterOpen != null && dialogueAfterOpen.Length > 0)
+                        DialogueSystem.Instance.StartDialogue(dialogueAfterOpen);
+
                     TeleportPlayer();
                 }
                 else
                 {
+                    if (!string.IsNullOrEmpty(objectiveWhenLocked) && ObjectiveManager.Instance.currentObjective == objectiveWhenLocked)
+                    {
+                        ObjectiveManager.Instance.SetObjective(nextObjectiveWhenLocked);
+                    }
+
                     if (dialogueWhenLocked != null && dialogueWhenLocked.Length > 0)
                     {
                         DialogueSystem.Instance.StartDialogue(dialogueWhenLocked);
@@ -118,9 +134,9 @@ public class LockedDoor : MonoBehaviour
             {
                 ObjectiveManager.Instance.SetObjective(nextObjective);
             
-                if (dialogueAfterComplete != null && dialogueAfterComplete.Length > 0)
+                if (dialogueAfterOpen != null && dialogueAfterOpen.Length > 0)
                 {
-                    DialogueSystem.Instance.StartDialogue(dialogueAfterComplete);
+                    DialogueSystem.Instance.StartDialogue(dialogueAfterOpen);
                 }
             }
         }
