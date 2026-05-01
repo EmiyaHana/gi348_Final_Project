@@ -3,8 +3,16 @@ using TMPro;
 
 public class LockedDoor : MonoBehaviour
 {
+    [Header("Objective Settings")]
+    public string objectiveRequired = "";
+    public string nextObjective = "";
+    [TextArea(2, 5)] public string[] dialogueAfterComplete;
+
+    [Header("Locked Settings")]
     public KeyType keyNeeded;
     public bool isLocked = true;
+    [TextArea(2, 5)] public string[] dialogueWhenLocked;
+
     public Transform teleportTarget;
     public GameObject interactPromptUI;
     public GameObject lockedMessageUI;
@@ -39,10 +47,16 @@ public class LockedDoor : MonoBehaviour
                     {
                         Debug.Log("Use basement exit key.");
                     }
+
                     TeleportPlayer();
                 }
                 else
                 {
+                    if (dialogueWhenLocked != null && dialogueWhenLocked.Length > 0)
+                    {
+                        DialogueSystem.Instance.StartDialogue(dialogueWhenLocked);
+                    }
+
                     ShowLockedMessage("" + keyNeeded.ToString());
                 }
             }
@@ -88,11 +102,27 @@ public class LockedDoor : MonoBehaviour
             
             if (cc != null) cc.enabled = true;
 
+            if (!string.IsNullOrEmpty(objectiveRequired) && 
+                ObjectiveManager.Instance.currentObjective == objectiveRequired)
+            {
+                ObjectiveManager.Instance.SetObjective(nextObjective);
+            }
+
             isShowingMessage = false;
             if (interactPromptUI != null) interactPromptUI.SetActive(false);
             if (lockedMessageUI != null) lockedMessageUI.SetActive(false);
 
             Debug.Log("Enter the door.");
+
+            if (!string.IsNullOrEmpty(objectiveRequired) && ObjectiveManager.Instance.currentObjective == objectiveRequired)
+            {
+                ObjectiveManager.Instance.SetObjective(nextObjective);
+            
+                if (dialogueAfterComplete != null && dialogueAfterComplete.Length > 0)
+                {
+                    DialogueSystem.Instance.StartDialogue(dialogueAfterComplete);
+                }
+            }
         }
     }
 

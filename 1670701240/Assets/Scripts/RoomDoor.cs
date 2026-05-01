@@ -14,6 +14,10 @@ public class RoomDoor : MonoBehaviour
     [Tooltip("Warning Text")]
     public GameObject interactPromptUI;
 
+    [Header("Objective Settings")]
+    public string objectiveRequired = "";
+    public string nextObjective = "";
+
     private bool playerInRange = false;
     private GameObject playerRef;
 
@@ -69,6 +73,12 @@ public class RoomDoor : MonoBehaviour
             if (interactPromptUI != null) interactPromptUI.SetActive(false);
 
             Debug.Log("Enter the door.");
+
+            if (!string.IsNullOrEmpty(objectiveRequired) && 
+                ObjectiveManager.Instance.currentObjective == objectiveRequired)
+            {
+                ObjectiveManager.Instance.SetObjective(nextObjective);
+            }
 
             GameObject enemy = GameObject.FindGameObjectWithTag("Enemy");
             if (enemy != null)

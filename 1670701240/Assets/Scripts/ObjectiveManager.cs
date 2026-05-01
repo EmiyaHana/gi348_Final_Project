@@ -11,9 +11,16 @@ public class ObjectiveManager : MonoBehaviour
 
     public string currentObjective = "Exploration";
 
-    void Awake()
+    private void Awake()
     {
-        Instance = this;
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
     }
 
     void Start()
