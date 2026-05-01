@@ -27,7 +27,7 @@ public class PlayerInteract : MonoBehaviour
 
         if (isHiding)
         {
-            if (interactText != null) interactText.text = "Press E to exit.";
+            if (interactText != null) interactText.text = "[E] to exit";
             
             if (Input.GetKeyDown(KeyCode.E))
             {
@@ -46,13 +46,32 @@ public class PlayerInteract : MonoBehaviour
             SearchableObject searchable = hit.GetComponent<SearchableObject>();
             if (searchable != null && !searchable.isSearched)
             {
-                if (interactText != null) interactText.text = "Press [E] to search " + searchable.objectName;
+                if (interactText != null) interactText.text = "[E] to search " + searchable.objectName;
+                break;
+            }
+
+            SavePoint savePoint = hit.GetComponent<SavePoint>();
+            if (savePoint != null)
+            {
+                if (interactText != null) interactText.text = "[E] to Save Game";
+                
+                if (Input.GetKeyDown(KeyCode.E))
+                {
+                    InventoryManager inv = GetComponent<InventoryManager>();
+                    if (inv != null)
+                    {
+                        CheckpointManager.SaveProgress(savePoint.spawnPoint.position, inv.specialKeys);
+                        Debug.Log("Game Saved!");
+
+                        if (interactText != null) interactText.text = "Game Saved!"; 
+                    }
+                }
                 break;
             }
 
             if (hit.CompareTag("ItemStamina"))
             {
-                if (interactText != null) interactText.text = "Press [E] to pick up item.";
+                if (interactText != null) interactText.text = "[E] to pick up item";
                 break;
             }
 
@@ -65,7 +84,7 @@ public class PlayerInteract : MonoBehaviour
             Generator gen = hit.GetComponent<Generator>();
             if (gen != null && !Generator.isGeneratorFixed)
             {
-                if (interactText != null) interactText.text = "Press [E] to fix the Generator.";
+                if (interactText != null) interactText.text = "[E] to fix the Generator";
                 break;
             }
         }
@@ -122,7 +141,7 @@ public class PlayerInteract : MonoBehaviour
         {
             if (hit.CompareTag("Key"))
             {
-                if (interactText != null) interactText.text = "Press E to collect.";
+                if (interactText != null) interactText.text = "[E] to collect";
                 if (Input.GetKeyDown(KeyCode.E))
                 {
                     hasKey = true;
@@ -139,7 +158,7 @@ public class PlayerInteract : MonoBehaviour
                 }
                 else
                 {
-                    if (interactText != null) interactText.text = "Press E to use the key.";
+                    if (interactText != null) interactText.text = "[E] to use the key";
                     if (Input.GetKeyDown(KeyCode.E))
                     {
                         WinGame();
@@ -150,7 +169,7 @@ public class PlayerInteract : MonoBehaviour
 
             if (hit.CompareTag("Locker"))
             {
-                if (interactText != null) interactText.text = "Press E to hide.";
+                if (interactText != null) interactText.text = "[E] to hide";
                 if (Input.GetKeyDown(KeyCode.E))
                 {
                     HidingSpot spot = hit.GetComponent<HidingSpot>();
@@ -167,7 +186,7 @@ public class PlayerInteract : MonoBehaviour
                 StairsTeleporter stairs = hit.GetComponent<StairsTeleporter>();
 
                 string textToShow = "";
-                if (stairs.upDestination != null || stairs.downDestination != null) textToShow += "Press W , S to use stairs.";
+                if (stairs.upDestination != null || stairs.downDestination != null) textToShow += "[W] go up [S] go down";
 
                 if (interactText != null) interactText.text = textToShow;
                 
@@ -184,7 +203,7 @@ public class PlayerInteract : MonoBehaviour
 
             if (hit.CompareTag("ItemHealth"))
             {
-                if (interactText != null) interactText.text = "Press E to use item (heal 1 HP).";
+                if (interactText != null) interactText.text = "[E] to use item";
                 if (Input.GetKeyDown(KeyCode.E))
                 {
                     GetComponent<PlayerHealth>().Heal(1);
@@ -195,7 +214,7 @@ public class PlayerInteract : MonoBehaviour
 
             if (hit.CompareTag("ItemStamina"))
             {
-                if (interactText != null) interactText.text = "Press E to use item (restore the stamina bar).";
+                if (interactText != null) interactText.text = "[E] to use item";
                 if (Input.GetKeyDown(KeyCode.E))
                 {
                     PlayerMovement moveScript = GetComponent<PlayerMovement>();

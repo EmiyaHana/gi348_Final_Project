@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using System.Collections.Generic;
 
 public class PlayerHealth : MonoBehaviour
 {
@@ -17,12 +18,40 @@ public class PlayerHealth : MonoBehaviour
 
     void Start()
     {
+        if (CheckpointManager.hasCheckpoint)
+        {
+            CharacterController cc = GetComponent<CharacterController>();
+            if (cc != null) cc.enabled = false;
+            transform.position = CheckpointManager.lastCheckpointPos;
+            if (cc != null) cc.enabled = true;
+
+            InventoryManager inv = GetComponent<InventoryManager>();
+            if (inv != null)
+            {
+                inv.specialKeys = new List<KeyType>(CheckpointManager.savedKeys);
+                inv.UpdateSpecialKeyUI();
+            }
+        }
+
         currentHealth = maxHealth;
         UpdateHealthUI();
 
         if (gameOverPanel != null) gameOverPanel.SetActive(false);
         
         Time.timeScale = 1f;
+    }
+
+    public void FullRestart()
+    {
+        CheckpointManager.ResetAll();
+        Time.timeScale = 1f;
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    public void ContinueFromCheckpoint()
+    {
+        Time.timeScale = 1f;
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
     public void TakeDamage(int amount)

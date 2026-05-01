@@ -1,6 +1,6 @@
 public enum KeyType
 {
-    None,
+    Locked,
     OfficeKey,
     BasementExitKey
 }

@@ -9,13 +9,13 @@ public class SearchableObject : MonoBehaviour
     public int healthItems = 0;
     public int staminaItems = 0;
 
-    public KeyType specialKeyInside = KeyType.None;
+    public KeyType specialKeyInside = KeyType.Locked;
 
     public void Search(InventoryManager inventory)
     {
         if (isSearched) return;
 
-        if (specialKeyInside != KeyType.None)
+        if (specialKeyInside != KeyType.Locked)
         {
             inventory.AddSpecialKey(specialKeyInside);
         }

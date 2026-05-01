@@ -36,7 +36,7 @@ public class LockedDoor : MonoBehaviour
                 }
                 else
                 {
-                    ShowLockedMessage("You need " + keyNeeded.ToString());
+                    ShowLockedMessage("" + keyNeeded.ToString());
                 }
             }
             else

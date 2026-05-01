@@ -7,6 +7,7 @@ public class MainMenuManager : MonoBehaviour
 
     public void PlayGame()
     {
+        CheckpointManager.ResetAll();
         SceneManager.LoadScene(levelToLoad);
         Time.timeScale = 1f;
     }

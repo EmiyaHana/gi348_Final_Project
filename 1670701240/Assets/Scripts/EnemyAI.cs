@@ -139,6 +139,6 @@ public class EnemyAI : MonoBehaviour
     {
         isActive = true;
         gameObject.SetActive(true);
-        Debug.Log("º’∂Ÿ°ª≈ÿ°·≈È«!");
+        Debug.Log("Something has awakening...");
     }
 }
