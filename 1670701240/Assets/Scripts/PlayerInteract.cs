@@ -60,7 +60,7 @@ public class PlayerInteract : MonoBehaviour
                     InventoryManager inv = GetComponent<InventoryManager>();
                     if (inv != null)
                     {
-                        CheckpointManager.SaveProgress(savePoint.spawnPoint.position, inv.specialKeys);
+                        CheckpointManager.SaveProgress(savePoint.spawnPoint.position, inv.specialKeys, inv.slots);
                         Debug.Log("Game Saved!");
 
                         if (interactText != null) interactText.text = "Game Saved!"; 
@@ -77,7 +77,7 @@ public class PlayerInteract : MonoBehaviour
 
             if (hit.CompareTag("ItemHealth"))
             {
-                if (interactText != null) interactText.text = "Press [E] to pick up Medkit.";
+                if (interactText != null) interactText.text = "[E] to pick up Medkit.";
                 break;
             }
 

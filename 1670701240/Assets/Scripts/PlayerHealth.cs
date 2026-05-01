@@ -29,6 +29,7 @@ public class PlayerHealth : MonoBehaviour
             if (inv != null)
             {
                 inv.specialKeys = new List<KeyType>(CheckpointManager.savedKeys);
+                inv.slots = new List<string>(CheckpointManager.savedInventoryItems);
                 inv.UpdateSpecialKeyUI();
             }
         }

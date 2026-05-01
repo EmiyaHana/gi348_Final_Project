@@ -31,7 +31,14 @@ public class LockedDoor : MonoBehaviour
                 if (inv != null && inv.HasKey(keyNeeded))
                 {
                     isLocked = false;
-                    Debug.Log("Use " + keyNeeded + ".");
+                    if (keyNeeded == KeyType.OfficeKey)
+                    {
+                        Debug.Log("Use office key.");
+                    }
+                    if (keyNeeded == KeyType.BasementExitKey)
+                    {
+                        Debug.Log("Use basement exit key.");
+                    }
                     TeleportPlayer();
                 }
                 else

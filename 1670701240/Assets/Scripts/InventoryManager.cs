@@ -24,7 +24,14 @@ public class InventoryManager : MonoBehaviour
         if (!specialKeys.Contains(newKey))
         {
             specialKeys.Add(newKey);
-            Debug.Log("You got " + newKey.ToString());
+            if (newKey == KeyType.OfficeKey)
+            {
+                Debug.Log("You got office key.");
+            }
+            if (newKey == KeyType.BasementExitKey)
+            {
+                Debug.Log("You got basement exit key.");
+            }
             UpdateSpecialKeyUI();
         }
     }
@@ -47,7 +54,14 @@ public class InventoryManager : MonoBehaviour
                 string keyListText = "You have : ";
                 foreach (KeyType key in specialKeys)
                 {
-                    keyListText += " - " + key.ToString() + "\n"; 
+                    if (key == KeyType.OfficeKey)
+                    {
+                        keyListText += " - Office Key\n";
+                    }
+                    if (key == KeyType.BasementExitKey)
+                    {
+                        keyListText += " - Basement Exit Key\n";
+                    } 
                 }
                 specialKeyDisplayUI.text = keyListText;
             }
