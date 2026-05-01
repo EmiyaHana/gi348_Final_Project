@@ -63,7 +63,7 @@ public class PlayerInteract : MonoBehaviour
                         CheckpointManager.SaveProgress(savePoint.spawnPoint.position, inv.specialKeys, inv.slots);
                         Debug.Log("Game Saved!");
 
-                        if (interactText != null) interactText.text = "Game Saved!"; 
+                        if (interactText != null) interactText.text = "Game Saved!";
                     }
                 }
                 break;
