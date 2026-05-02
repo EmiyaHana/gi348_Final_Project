@@ -38,6 +38,10 @@ public class ShadowClawTrap : MonoBehaviour
 
     void TryAttackPlayer(GameObject player)
     {
+        if (attackSound != null)
+        {
+            attackSound.Play();
+        }
         DoDamage(player);
     }
 
